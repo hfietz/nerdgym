@@ -17,8 +17,7 @@ class App:
     
     def routing(self):
         return { 
-            '/hello/([^/]+)/?': self.echo,
-            '/(test)': self.echo
+            '/echo(/.*)?': self.echo
             }
 
     def echo(self, vars, params):

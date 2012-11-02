@@ -5,10 +5,10 @@ import sys
 
 from Server import Server
 from Config import Config
-from App import App
+from Nerdgym import Nerdgym
 
 cfg = Config(os.path.dirname(os.path.abspath(sys.argv[0])))
-app = App(cfg)
+app = Nerdgym(cfg)
 
 server = Server(app, cfg)
 try:
