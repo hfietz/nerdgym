@@ -1,1 +1,10 @@
-CSS
+div#main {
+  position: absolute;
+  border: 1px solid #4169e1;
+  font-size: 15px;
+  line-height: 1em;
+  top: 2em;
+  bottom: 2em;
+  left: 30px;
+  right: 30px;
+}
