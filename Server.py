@@ -11,22 +11,20 @@ from SimpleHTTPServer import SimpleHTTPRequestHandler
 class Server(HTTPServer):
     app = None
     cfg = None
-    routes = {}
 
     def __init__(self, app, cfg):
         self.app = app
         self.cfg = cfg
-        self.routes = app.routing()
         HTTPServer.__init__(self, (cfg.getServerHost(), cfg.getServerPort()), Dispatcher)
 
     def hasRoute(self, path):
-        for pattern, handler in self.routes.iteritems():
+        for pattern, handler in self.app.routing().iteritems():
             if re.compile(pattern).match(path):
                 return True
         return False
 
     def getRoute(self, path):
-        for pattern, handler in self.routes.iteritems():
+        for pattern, handler in self.app.routing().iteritems():
             match = re.compile(pattern).match(path)
             if match:
                 return (handler, match.groups())
@@ -39,9 +37,10 @@ class Dispatcher(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
             (path, params) = self.parseQueryString(self.path)
+            return self.processRequest(path, params)
         except Exception, e:
             self.renderError(e)
-        return self.processRequest(path, params)
+            return False
 
     def do_POST(self):
         try:
@@ -49,9 +48,10 @@ class Dispatcher(BaseHTTPRequestHandler):
             (mime, body) = self.readBody()
             if 'application/x-www-form-urlencoded' == mime:
                 params.update(self.parseUrlencodedParams(body))
+            return self.processRequest(path, params)
         except Exception, e:
             self.renderError(e)
-        return self.processRequest(path, params)
+            return False
 
     def processRequest(self, path, params):
         try:

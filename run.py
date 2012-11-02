@@ -3,8 +3,6 @@
 import os
 import sys
 
-from BaseHTTPServer import HTTPServer
-
 from Server import Server
 from Config import Config
 from App import App
