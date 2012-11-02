@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # vim: set fileencoding=utf-8 :
+import json
+
 from Db import Db
 
 class App:
@@ -15,11 +17,14 @@ class App:
     
     def routing(self):
         return { 
-            '/hello/([^/]+)/?': self.sayHello,
-            '/(test)': self.sayHello
+            '/hello/([^/]+)/?': self.echo,
+            '/(test)': self.echo
             }
 
-    def sayHello(self, vars, params):
-        s = '<h1>Hello, %s</h1>' % vars[0]
-        s += "%s" % params
-        return ('text/html', s)
+    def echo(self, vars, params):
+        params[u'path_vars'] = vars
+        return self.to_json_response(params)
+
+    def to_json_response(self, data):
+        s = json.dumps(data, indent=2)
+        return ('text/json', s)
